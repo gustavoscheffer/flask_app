@@ -1,0 +1,52 @@
+<!-- extends "base.html" -->
+{% extends "base.html" %}
+
+{% block title %}Todo List{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <h1 class="title is-1 has-text-centered">Todo List</h1>
+
+      <div class="box">
+        <form name="title" method="POST" action="/add">
+          <div class="field is-grouped">
+            <div class="control is-expanded">
+              <input class="input" type="text" name="title" placeholder="Enter todo title" required>
+            </div>
+            <div class="control">
+              <button class="button is-primary" type="submit">Add Todo</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div id="todos-list">
+        {% if not todos %}
+          <div class="notification is-info is-light has-text-centered">
+            <p>No todos available.</p>
+          </div>
+        {% else %}
+          {% for todo in todos %}
+            <div class="todo-item">
+              <div class="todo-content">
+                <p class="mb-2">{{ todo.title }}</p>
+                <span class="tag {% if todo.completed %}is-success{% else %}is-warning{% endif %}">
+                  {% if todo.completed %}✓ Completed{% else %}⏱ Not Completed{% endif %}
+                </span>
+              </div>
+              <div class="todo-actions">
+                <form action="/update/{{ todo.id }}" method="POST">
+                  <button class="button is-small {% if todo.completed %}is-light{% else %}is-info{% endif %}" type="submit">
+                    {% if todo.completed %}Mark Incomplete{% else %}Mark Complete{% endif %}
+                  </button>
+                </form>
+                <form action="/delete/{{ todo.id }}" method="POST">
+                  <button class="button is-small is-danger is-light" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+{% endblock %}
