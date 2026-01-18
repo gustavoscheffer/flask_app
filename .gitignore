@@ -37,8 +37,19 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
-.noseids
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
 pytest_cache/
+.noseids
+test-results/
+*.db
+test_*.db
+instance/test.db
+instance/test_test.db
 # Translations
 *.mo
 *.pot

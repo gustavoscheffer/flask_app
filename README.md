@@ -22,12 +22,20 @@ flask_app/
 │   ├── extensions.py        # Flask extensions
 │   ├── models.py            # Database models
 │   └── routes.py            # Application routes
+├── tests/                   # Test suite
+│   ├── __init__.py
+│   ├── conftest.py          # Pytest fixtures
+│   ├── test_config.py       # Configuration tests
+│   ├── test_models.py       # Model tests
+│   └── test_routes.py       # Route and integration tests
 ├── instance/                # Instance-specific files (SQLite DB)
 ├── templates/               # Jinja2 templates
 │   ├── base.html
 │   └── index.html
 ├── requirements.txt         # Python dependencies
 ├── run.py                   # Application entry point
+├── pytest.ini               # Pytest configuration
+├── .coveragerc              # Coverage configuration
 └── README.md
 ```
 
@@ -154,11 +162,98 @@ This application follows a modular architecture:
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Display all todos |
-| POST | `/add` | Create a new todo |
-| POST | `/update/<id>` | Toggle todo completion status |
-| POST | `/delete/<id>` | Delete a todo |
+|he application includes a comprehensive test suite covering models, routes, configuration, and integration scenarios.
+
+### Test Structure
+
+```
+tests/
+├── conftest.py          # Pytest fixtures and configuration
+├── test_config.py       # Configuration tests (6 tests)
+├── test_models.py       # Database model tests (14 tests)
+└── test_routes.py       # Route and integration tests (21 tests)
+```
+
+### Running Tests
+
+**Run all tests:**
+```bash
+pytest
+```
+
+**Run with verbose output:**
+```bash
+pytest -v
+```
+
+**Run with coverage report:**
+```bash
+pytest --cov=app --cov-report=html
+```
+
+**Run specific test file:**
+```bash
+pytest tests/test_models.py
+```
+
+**Run specific test:**
+```bash
+pytest tests/test_routes.py::TestRoutes::test_add_todo -v
+```
+
+**Run tests by marker:**
+```bash
+pytest -m unit          # Run unit tests only
+pytest -m integration   # Run integration tests only
+```
+
+### Test Coverage
+
+The test suite provides comprehensive coverage:
+
+- **Configuration Tests**: Environment settings, configuration inheritance
+- **Model Tests**: CRUD operations, validation, model methods
+- **Route Tests**: All endpoints, edge cases, error handling
+- **Integration Tests**: Complete workflows from add to delete
+
+View detailed coverage report:
+```bash
+pytest --cov=app --cov-report=html
+open htmlcov/index.html  # Opens coverage report in browser
+```
+
+### Writing New Tests
+
+When adding new features, include tests in the appropriate test file:
+
+1. **Models**: Add tests to `tests/test_models.py`
+2. **Routes**: Add tests to `tests/test_routes.py`
+3. **Configuration**: Add tests to `tests/test_config.py`
+
+Use the fixtures in `tests/conftest.py`:
+- `client`: Test client for HTTP requests
+- `db`: Test database instance
+- `sample_todo`: Single test todo
+- `multiple_todos`: Multiple test todos
+
+Example test:
+```python
+def test_my_feature(client, db):
+    """Test my new feature."""
+    response = client.post('/my-endpoint', data={'key': 'value'})
+    assert response.status_code == 200
+```
+
+### Continuous Integration
+
+Tests should be run before each commit and in CI/CD pipelines:
+
+```bash
+# Pre-commit testing
+pytest --cov=app --cov-report=term-missing
+
+# Ensure all tests pass before pushing
+git commit -m "Your message" && pytest && git pushe/<id>` | Delete a todo |
 
 ## Testing
 
