@@ -4,6 +4,7 @@ from flask import Flask
 
 from app.config import config
 from app.extensions import db
+from app.routes import main
 
 
 def create_app(config_name=None):
@@ -35,7 +36,6 @@ def create_app(config_name=None):
     db.init_app(app)
     
     # Register blueprints
-    from app.routes import main
     app.register_blueprint(main)
     
     # Create database tables
