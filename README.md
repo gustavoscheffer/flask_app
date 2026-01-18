@@ -20,8 +20,18 @@ flask_app/
 │   ├── __init__.py          # Application factory
 │   ├── config.py            # Configuration classes
 │   ├── extensions.py        # Flask extensions
-│   ├── models.py            # Database models
-│   └── routes.py            # Application routes
+│   ├── models/              # Database models
+│   │   ├── __init__.py
+│   │   └── todo.py          # Todo model
+│   ├── routes/              # Application routes
+│   │   ├── __init__.py
+│   │   └── main.py          # Main blueprint routes
+│   ├── services/            # Business logic layer
+│   │   ├── __init__.py
+│   │   └── todo_service.py  # Todo service
+│   └── templates/           # Jinja2 templates
+│       ├── base.html
+│       └── index.html
 ├── tests/                   # Test suite
 │   ├── __init__.py
 │   ├── conftest.py          # Pytest fixtures
@@ -29,13 +39,11 @@ flask_app/
 │   ├── test_models.py       # Model tests
 │   └── test_routes.py       # Route and integration tests
 ├── instance/                # Instance-specific files (SQLite DB)
-├── templates/               # Jinja2 templates
-│   ├── base.html
-│   └── index.html
 ├── requirements.txt         # Python dependencies
 ├── run.py                   # Application entry point
 ├── pytest.ini               # Pytest configuration
 ├── .coveragerc              # Coverage configuration
+├── .gitignore               # Git ignore rules
 └── README.md
 ```
 
@@ -145,19 +153,36 @@ python run.py
 
 ### Project Architecture
 
-This application follows a modular architecture:
+This application follows a modular architecture with clear separation of concerns:
 
 - **Application Factory Pattern**: Enables multiple app instances for testing
 - **Blueprints**: Organizes routes into logical modules
+- **Service Layer**: Business logic separated from route handlers
+- **Package-based Organization**: Models, routes, and services in dedicated directories
 - **Extensions Module**: Centralized Flask extension initialization
 - **Configuration Classes**: Environment-specific settings management
 
 ### Adding New Features
 
-1. **Models**: Add database models to `app/models.py`
-2. **Routes**: Add routes to `app/routes.py` or create new blueprints
-3. **Templates**: Add HTML templates to `templates/`
-4. **Configuration**: Update settings in `app/config.py`
+1. **Models**: Add database models to `app/models/` directory (e.g., `app/models/user.py`)
+2. **Routes**: Add routes to `app/routes/` or create new blueprints (e.g., `app/routes/api.py`)
+3. **Services**: Add business logic to `app/services/` (e.g., `app/services/user_service.py`)
+4. **Templates**: Add HTML templates to `app/templates/`
+5. **Configuration**: Update settings in `app/config.py`
+
+**Example - Adding a new model:**
+```python
+# app/models/user.py
+from app.extensions import db
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+
+# Update app/models/__init__.py
+from app.models.user import User
+__all__ = ['Todo', 'User']
+```
 
 ## API Endpoints
 

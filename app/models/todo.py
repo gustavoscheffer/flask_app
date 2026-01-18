@@ -1,4 +1,4 @@
-"""Database models."""
+"""Todo model."""
 from app.extensions import db
 
 
