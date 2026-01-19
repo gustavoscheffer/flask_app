@@ -19,9 +19,9 @@ jobs:
         run: |
           pylint $(git ls-files '*.py')
 
-  testing-code:
+  test:
     runs-on: ubuntu-latest
-    needs: install-dependencies
+    needs: build
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
