@@ -1,0 +1,25 @@
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning Github Actions
+on: [push]
+jobs:
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: 'pip install -r reqirements.txt'
+
+  testing-code:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: pip
+      - run: 'pytest -m unit'
+    
