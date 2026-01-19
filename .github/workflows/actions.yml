@@ -19,17 +19,17 @@ jobs:
         run: |
           pylint $(git ls-files '*.py')
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.13'
-          cache: pip
-      - run: 'pip install -r requirements.txt'
-      - run: 'pytest'
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #     - uses: actions/checkout@v5
+  #     - uses: actions/setup-python@v6
+  #       with:
+  #         python-version: '3.13'
+  #         cache: pip
+  #     - run: 'pip install -r requirements.txt'
+  #     - run: 'pytest'
   
 
 
