@@ -11,7 +11,7 @@ def app():
     """Create and configure a test application instance."""
     # Create the app with testing configuration
     app = create_app('testing')
-    
+
     # Create application context
     with app.app_context():
         yield app
@@ -23,9 +23,9 @@ def db(app):
     with app.app_context():
         # Create all tables
         _db.create_all()
-        
+
         yield _db
-        
+
         # Clean up after test
         _db.session.remove()
         _db.drop_all()
