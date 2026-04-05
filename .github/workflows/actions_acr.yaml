@@ -49,8 +49,8 @@ jobs:
           service_principal: ${{ secrets.SERVICE_PRINCIPAL }}
           service_principal_password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
           tenant: ${{ secrets.TENANT }}
-          registry: ${{ secrets.REGISTRY }}
-          repository: ${{ secrets.REPOSITORY }}
+          registry: ${{ vars.REGISTRY }}
+          repository: ${{ vars.REPOSITORY }}
           image: flaskapp
           # tag: latest
           folder: ./
