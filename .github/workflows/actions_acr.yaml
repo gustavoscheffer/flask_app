@@ -52,7 +52,7 @@ jobs:
           registry: ${{ secrets.REGISTRY }}
           repository: ${{ secrets.REPOSITORY }}
           image: flaskapp
-          tag: latest
+          # tag: latest
           folder: ./
           dockerfile: Dockerfile
           git_access_token: ${{ secrets.GB_TOKEN }}
