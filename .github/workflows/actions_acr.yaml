@@ -1,5 +1,5 @@
 name: App Build ACR
-run-name : ${{ github.actor }} is learning Github Actions + ACR
+run-name : ${{ github.actor }} is learning Github Actions + ACR container image upload
 on:
   push:
     branches:
@@ -25,15 +25,35 @@ jobs:
             pylint $(git ls-files '*.py')
 
   test:
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v5
+    - uses: actions/setup-python@v6
+      with:
+        python-version: '3.13'
+        cache: pip
+    - name: Display Python version
+      run: python -c "import sys; print(sys.version)"
+    - run: 'pip install -r requirements.txt'
+    - run: 'pytest'
+  
+  ACRBuild:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: ACR build
+        id: acr
+        uses: azure/acr-build@v1
         with:
-          python-version: '3.13'
-          cache: pip
-      - name: Display Python version
-        run: python -c "import sys; print(sys.version)"
-      - run: 'pip install -r requirements.txt'
-      - run: 'pytest'
+          service_principal: ${{ secrets.SERVICE_PRINCIPAL }}
+          service_principal_password: ${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}
+          tenant: ${{ secrets.TENANT }}
+          registry: ${{ vars.REGISTRY }}
+          repository: ${{ vars.REPOSITORY }}
+          image: flaskapp
+          # tag: latest
+          folder: ./
+          dockerfile: Dockerfile
+          git_access_token: ${{ secrets.GB_TOKEN }}
+          branch: ${{ github.ref_name }}

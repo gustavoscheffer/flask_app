@@ -1,5 +1,5 @@
 name: App Build
-run-name: ${{ github.actor }} is learning Github Actions Dockerhub
+run-name: ${{ github.actor }} is learning Github Actions + Dockerhub container image upload
 on:
   push:
     branches:
