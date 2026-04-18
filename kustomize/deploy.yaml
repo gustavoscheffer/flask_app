@@ -21,24 +21,11 @@ spec:
         name: flask-app-v5qh8
         ports:
         - containerPort: 5000
-        resources: {}
+        resources: 
+          limits:
+            cpu: "1"
+            memory: 512Mi
+          requests:
+            cpu: "0.5"
+            memory: 256Mi
 status: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: todo-app
-  name: todo-app
-spec:
-  ports:
-  - name: 5000-tcp
-    port: 5000
-    protocol: TCP
-    targetPort: 5000
-  selector:
-    app: todo-app
-  type: NodePort
-status:
-  loadBalancer: {}
