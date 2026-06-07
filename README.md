@@ -1,31 +1,30 @@
-# Flask Todo Application
+# Todo App
 
-A modular Flask web application for managing todo tasks with a clean, maintainable architecture following best practices.
+A modular Flask web application for managing todo tasks with a clean, maintainable architecture.
 
 ## Features
 
-- ✅ Create, read, update, and delete todos
-- ✅ Mark todos as complete/incomplete
-- ✅ SQLite database for data persistence
-- ✅ Modular architecture with blueprints
-- ✅ Application factory pattern
-- ✅ Environment-based configuration
-- ✅ Responsive web interface
+- ✅ Create, view, update, and delete todo items
+- ✅ Mark todos as complete or incomplete
+- ✅ SQLite persistence with SQLAlchemy
+- ✅ Application factory pattern for easy testing
+- ✅ Blueprint-based route organization
+- ✅ Service layer for business logic separation
 
 ## Project Structure
 
 ```
-flask_app/
+todo_app/
 ├── app/
-│   ├── __init__.py          # Application factory
+│   ├── __init__.py          # Application factory and initialization
 │   ├── config.py            # Configuration classes
-│   ├── extensions.py        # Flask extensions
+│   ├── extensions.py        # Flask extension initialization
 │   ├── models/              # Database models
 │   │   ├── __init__.py
 │   │   └── todo.py          # Todo model
-│   ├── routes/              # Application routes
+│   ├── routes/              # Application blueprints and routes
 │   │   ├── __init__.py
-│   │   └── main.py          # Main blueprint routes
+│   │   └── main.py          # Main routes
 │   ├── services/            # Business logic layer
 │   │   ├── __init__.py
 │   │   └── todo_service.py  # Todo service
@@ -38,13 +37,12 @@ flask_app/
 │   ├── test_config.py       # Configuration tests
 │   ├── test_models.py       # Model tests
 │   └── test_routes.py       # Route and integration tests
-├── instance/                # Instance-specific files (SQLite DB)
+├── Dockerfile               # Optional container build
+├── README.md                # Project documentation
 ├── requirements.txt         # Python dependencies
 ├── run.py                   # Application entry point
 ├── pytest.ini               # Pytest configuration
-├── .coveragerc              # Coverage configuration
-├── .gitignore               # Git ignore rules
-└── README.md
+└── todo_app_dep.yaml        # Dependency metadata
 ```
 
 ## Requirements
@@ -55,69 +53,60 @@ flask_app/
 
 ## Installation
 
-### 1. Clone the repository
+1. Clone the repository:
 
 ```bash
 git clone <repository-url>
-cd flask_app
+cd todo_app
 ```
 
-### 2. Create a virtual environment
+2. Create and activate a virtual environment:
 
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 ```
 
-### 3. Install dependencies
+3. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Set up environment variables (optional)
-
-Create a `.env` file in the project root:
-
-```env
-FLASK_ENV=development
-SECRET_KEY=your-secret-key-here
-DATABASE_URL=sqlite:///test.db
-```
-
 ## Configuration
 
-The application supports multiple configurations:
+The app supports the following environments:
 
-- **Development** (`development`) - Debug mode enabled, detailed error pages
-- **Production** (`production`) - Optimized for production deployment
-- **Testing** (`testing`) - Separate test database, testing mode enabled
+- `development` - Debug mode enabled
+- `production` - Production-ready settings
+- `testing` - Testing mode with a separate database
 
-Set the environment using the `FLASK_ENV` variable:
+The environment is selected with `FLASK_ENV`:
 
 ```bash
-export FLASK_ENV=development  # or production, testing
+export FLASK_ENV=development
+```
+
+Optional configuration variables:
+
+```bash
+export SECRET_KEY=your-secret-key
+export DATABASE_URL=sqlite:///test.db
 ```
 
 ## Running the Application
 
-### Development Server
+Start the app locally:
 
 ```bash
 python run.py
 ```
 
-Or using Flask CLI:
-
-```bash
-flask --app run run --debug
-```
-
-The application will be available at `http://127.0.0.1:5000`
+Then open `http://127.0.0.1:5000` in your browser.
 
 ### Production Server
 
-For production, use a WSGI server like Gunicorn:
+Use Gunicorn for production hosting:
 
 ```bash
 pip install gunicorn
@@ -126,78 +115,23 @@ gunicorn -w 4 -b 0.0.0.0:8000 "app:create_app()"
 
 ## Usage
 
-### Adding a Todo
+- Add a todo by entering a task title and clicking **Add**.
+- Toggle completion status using the checkbox.
+- Delete todos using the **Delete** button.
 
-1. Navigate to the home page
-2. Enter a task title in the input field
-3. Click "Add" or press Enter
+## Testing
 
-### Completing a Todo
-
-Click the checkbox or "Complete" button next to a todo item to toggle its status.
-
-### Deleting a Todo
-
-Click the "Delete" button next to a todo item to remove it permanently.
-
-## Development
-
-### Database Migrations
-
-The database is automatically created when you first run the application. To reset the database:
+Run the test suite with pytest:
 
 ```bash
-rm instance/test.db
-python run.py
+pytest
 ```
 
-### Project Architecture
+## Notes
 
-This application follows a modular architecture with clear separation of concerns:
-
-- **Application Factory Pattern**: Enables multiple app instances for testing
-- **Blueprints**: Organizes routes into logical modules
-- **Service Layer**: Business logic separated from route handlers
-- **Package-based Organization**: Models, routes, and services in dedicated directories
-- **Extensions Module**: Centralized Flask extension initialization
-- **Configuration Classes**: Environment-specific settings management
-
-### Adding New Features
-
-1. **Models**: Add database models to `app/models/` directory (e.g., `app/models/user.py`)
-2. **Routes**: Add routes to `app/routes/` or create new blueprints (e.g., `app/routes/api.py`)
-3. **Services**: Add business logic to `app/services/` (e.g., `app/services/user_service.py`)
-4. **Templates**: Add HTML templates to `app/templates/`
-5. **Configuration**: Update settings in `app/config.py`
-
-**Example - Adding a new model:**
-```python
-# app/models/user.py
-from app.extensions import db
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-
-# Update app/models/__init__.py
-from app.models.user import User
-__all__ = ['Todo', 'User']
-```
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|he application includes a comprehensive test suite covering models, routes, configuration, and integration scenarios.
-
-### Test Structure
-
-```
-tests/
-├── conftest.py          # Pytest fixtures and configuration
-├── test_config.py       # Configuration tests (6 tests)
-├── test_models.py       # Database model tests (14 tests)
-└── test_routes.py       # Route and integration tests (21 tests)
-```
+- The app uses SQLAlchemy with SQLite by default.
+- The database files are created automatically when the app starts.
+- `run.py` builds the app using `app.create_app()` and runs it in debug mode by default.
 
 ### Running Tests
 
